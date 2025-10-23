@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+model Users {
+  user_id  String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  lastname String
+  email    String @unique
+  password String
+  role     Role 
+
+  // ความสัมพันธ์: ถ้าเป็นครู จะสร้างห้องเรียนอะไรไว้บ้าง
+  taughtClasses Classroom[] @relation("TeacherClasses")
+
+  // ความสัมพันธ์: ถ้าเป็นนักเรียน จะลงทะเบียนเรียนห้องไหนบ้าง
+  enrollments Enrollment[]
+
+  // ความสัมพันธ์: ถ้าเป็นนักเรียน จะส่งงานอะไรไปแล้วบ้าง
+  submissions Submission[]
+}
+
+model Classroom {
+  class_id    String @id @default(auto()) @map("_id") @db.ObjectId
+  class_name  String 
+  description String 
+
+  // ความสัมพันธ์: เชื่อมโยงไปยังครูผู้สอน
+  teacher_id String @db.ObjectId
+  teacher    Users  @relation("TeacherClasses", fields: [teacher_id], references: [user_id])
+
+  // ความสัมพันธ์: นักเรียนที่อยู่ในห้องนี้ (ผ่าน Model Enrollment)
+  students Enrollment[]
+
+  // ความสัมพันธ์: งานที่อยู่ในห้องนี้
+  assignments Assignment[]
+}
+
+// Model ใหม่: สำหรับเชื่อมโยงนักเรียนกับห้องเรียน (Many-to-Many)
+model Enrollment {
+  enrollment_id String    @id @default(auto()) @map("_id") @db.ObjectId
+  joined_at     DateTime  @default(now())
+
+  // ความสัมพันธ์: เชื่อมโยงไปหา Class
+  class_id  String    @db.ObjectId
+  classroom Classroom @relation(fields: [class_id], references: [class_id])
+
+  // ความสัมพันธ์: เชื่อมโยงไปหา Student (User)
+  student_id String @db.ObjectId
+  student    Users  @relation(fields: [student_id], references: [user_id])
+
+  // สร้าง Unique Index เพื่อป้องกันนักเรียนคนเดิมลงทะเบียนซ้ำในห้องเดิม
+  @@unique([class_id, student_id])
+}
+
+model Assignment {
+  assignment_id  String   @id @default(auto()) @map("_id") @db.ObjectId
+  title          String   
+  description    String   // <-- เพิ่มฟิลด์นี้สำหรับเก็บ "โจทย์"
+  due_date       DateTime 
+  create_at      DateTime  @default(now())
+  feedback_level String   // (Hint, Concept, Answer, None) [cite: 2, 3]
+
+  // ความสัมพันธ์: งานนี้อยู่ในห้องเรียนไหน
+  class_id  String    @db.ObjectId
+  classroom Classroom @relation(fields: [class_id], references: [class_id])
+
+  // ความสัมพันธ์: งานนี้มีการส่งงานอะไรบ้าง
+  submissions Submission[]
+}
+
+model Submission {
+  submission_id String   @id @default(auto()) @map("_id") @db.ObjectId
+  code          String   
+  submitted_at  DateTime  @default(now()) // (แก้คำผิดจาก subbmit_at)
+  status        String   // (Submitted, Grading, Graded) 
+  score         Int      
+
+  // แยก Feedback ตามที่โปรเจกต์ต้องการ 
+  ai_feedback      String? // Feedback จาก AI
+  teacher_feedback String? // Feedback เพิ่มเติมจากครู 
+
+  // ความสัมพันธ์: การส่งงานนี้เป็นของงานชิ้นไหน
+  assignment_id String     @db.ObjectId
+  assignment    Assignment @relation(fields: [assignment_id], references: [assignment_id])
+
+  // ความสัมพันธ์: การส่งงานนี้เป็นของนักเรียนคนไหน
+  student_id String @db.ObjectId
+  student    Users  @relation(fields: [student_id], references: [user_id])
+}

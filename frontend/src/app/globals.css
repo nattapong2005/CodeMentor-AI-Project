@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "LINE";
+  src: url("./font/LINESeedSansTH-Regular.ttf");
+}
+
+@font-face {
+  font-family: "LINE-Bold";
+  src: url("./font/LINESeedSansTH-ExtraBold.ttf");
+}
+
+@theme {
+  --color-primary: #1e1b4b;
+  --color-secondary: #471396;
+  --color-muted: #6b7280;
+}
+
+* {
+  font-family: "LINE";
+}
+
+h1 {
+  font-family: "LINE-Bold" !important;
+}
+
+body {
+  background-color: #f6f9fc;
+}
+
+@keyframes fadeIn {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
