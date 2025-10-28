@@ -45,11 +45,16 @@ app.get("/assignments", async (req: Request, res: Response) => {
 });
 
 app.get("/submissions", async (req: Request, res: Response) => {
-    const submissions = await prisma.submission.findMany();
+    const submissions = await prisma.submission.findMany({
+        include: {
+            student: true
+        }
+    });
     res.json(submissions);
 });
 
 // -------------------------------------------------------------------------
+
 
 
 app.get("/test-file/:user_id", async (req: Request, res: Response) => {
