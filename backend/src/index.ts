@@ -6,11 +6,14 @@ import dotenv from 'dotenv';
 import { promises as fs } from 'fs';
 import path from 'path';
 import prisma from './database/db';
+import { loginRoute } from './routes/login.route';
+import { userRoute } from './routes/user.route';
 
 dotenv.config();
 const port = process.env.PORT || 1337;
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 app.get("/", async (req: Request, res: Response) => {
     res.json({ message: "Hello API!" });
@@ -80,6 +83,9 @@ app.get("/test-file/:user_id", async (req: Request, res: Response) => {
 
 });
 
+app.use("/api/login", loginRoute);
+app.use("/api/users", userRoute);
+
 
 app.use((req: Request, res: Response) => {
     res.status(404).json({ message: "ไม่พบเส้นทางที่เรียกใช้" });
@@ -93,6 +99,6 @@ const online = `
 `;
 app.listen(port, () => {
     console.log(chalk.cyanBright(online));
-    console.log(chalk.greenBright(`API is running on localhost:${port}`));
+    console.log(chalk.greenBright(`API is running on http://localhost:${port}`));
 });
 
