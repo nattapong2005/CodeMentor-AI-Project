@@ -4,4 +4,7 @@ import { userController } from "../controllers/user.controller";
 export const userRoute = Router();
 
 userRoute.get("/", userController.getAllUser);
-userRoute.get("/:id", userController.getUserById);
+userRoute.get("/:user_id", userController.getUserById);
+userRoute.post("/", userController.createUser);
+userRoute.put("/:user_id", userController.updateUser);
+userRoute.delete("/:user_id", userController.deleteUser);

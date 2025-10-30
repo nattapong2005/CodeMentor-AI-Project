@@ -20,7 +20,8 @@
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "path": "^0.12.7",
-    "prisma": "^6.17.0"
+    "prisma": "^6.17.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

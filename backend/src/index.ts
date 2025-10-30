@@ -8,6 +8,9 @@ import path from 'path';
 import prisma from './database/db';
 import { loginRoute } from './routes/login.route';
 import { userRoute } from './routes/user.route';
+import { assignmentRoute } from './routes/assignment.route';
+import { classroomRoute } from './routes/classroom.route';
+import { submissionRoute } from './routes/submission.route';
 
 dotenv.config();
 const port = process.env.PORT || 1337;
@@ -59,7 +62,6 @@ app.get("/submissions", async (req: Request, res: Response) => {
 // -------------------------------------------------------------------------
 
 
-
 app.get("/test-file/:user_id", async (req: Request, res: Response) => {
     const { user_id } = req.params;
     const uploads = path.join(process.cwd(), '/src/uploads');
@@ -85,6 +87,9 @@ app.get("/test-file/:user_id", async (req: Request, res: Response) => {
 
 app.use("/api/login", loginRoute);
 app.use("/api/users", userRoute);
+app.use("/api/assignments", assignmentRoute);
+app.use("/api/classrooms", classroomRoute);
+app.use("/api/submissions", submissionRoute);
 
 
 app.use((req: Request, res: Response) => {
