@@ -1,12 +1,29 @@
-import React from 'react';
+"use client";
 
-const Login = () => {
+import React, { useState } from 'react';
+import { login } from '@/app/services/auth';
+import { useRouter } from "next/navigation";
+const Login: React.FC = () => {
+
+  const router = useRouter();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const data = await login({ email, password });
+      router.push('/home');
+    } catch (err: any) {
+      setError(err.message);
+    }
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-blue-700 flex items-center justify-center p-4">
       <div className="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-6xl">
-
         <div className="hidden md:block flex-1 text-center md:text-left text-white">
-          <h1 className='text-5xl font-bold mb-5'>Classroom+</h1>
+          <h1 className='text-5xl font-bold mb-5'>CodeMentor AI</h1>
           <h1 className="text-3xl lg:text-4xl font-bold mb-5">
             สวัสดี, นักศึกษาทุกคน
           </h1>
@@ -15,19 +32,19 @@ const Login = () => {
         <div className="flex-1 w-full max-w-lg bg-white shadow-2xl rounded-lg p-6 sm:p-10">
           <div className="text-center mb-4">
             <h1 className="text-3xl sm:text-4xl font-bold text-primary mb-2">
-             ยินดีต้อนรับกลับ
+              ยินดีต้อนรับกลับ
             </h1>
-              <p>กรอกข้อมูลเพื่อเข้าสู่ระบบ</p>
+            <p>กรอกข้อมูลเพื่อเข้าสู่ระบบ</p>
           </div>
-          <div className="mb-6">
-            {/* <i>
-              <p className="text-gray-600 font-medium text-sm sm:text-base">
-                "ยกระดับการเขียนโค้ดด้วย AI และ Feedback ที่มีคุณภาพ"
-              </p>
-            </i> */}
-      
-          </div>
-          <form>
+          <form onSubmit={handleLogin}>
+            <div>
+              {error && (
+                <p className="mt-2 mb-2 text-sm text-red-600 bg-red-50 border border-red-300 rounded-md px-3 py-2">
+                  {error}
+                </p>
+              )}
+            </div>
+
             <div className="mb-5">
               <label className="block mb-2 text-base font-medium text-primary">
                 อีเมล
@@ -36,7 +53,8 @@ const Login = () => {
                 type="email"
                 className="bg-gray-50 border border-gray-300 focus:border-primary transition-all duration-300 text-gray-900 text-sm rounded-lg block w-full p-3 focus:ring-primary/30 focus:outline-none focus:ring-1"
                 placeholder="กรอกอีเมล"
-                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div className="mb-5">
@@ -47,7 +65,8 @@ const Login = () => {
                 type="password"
                 className="bg-gray-50 border border-gray-300 focus:border-primary transition-all duration-300 text-gray-900 text-sm rounded-lg block w-full p-3 focus:ring-primary/30 focus:outline-none focus:ring-1"
                 placeholder="กรอกรหัสผ่าน"
-                required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
             <div>
@@ -57,14 +76,6 @@ const Login = () => {
               >
                 เข้าสู่ระบบ
               </button>
-            </div>
-            <div className="mt-4 text-center">
-              <a
-                href="#"
-                className="text-sm text-gray-600 hover:text-primary transition-colors duration-200"
-              >
-                ยังไม่มีบัญชี? <span className='text-primary font-semibold'>สร้างบัญชีใหม่</span>
-              </a>
             </div>
           </form>
         </div>

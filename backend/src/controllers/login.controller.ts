@@ -14,7 +14,6 @@ export const loginController = {
                 return res.status(400).json({ message: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง"});
             }
             const { email, password } = result.data;
-      
             const user = await prisma.users.findUnique({
                 where: { email },
             });
