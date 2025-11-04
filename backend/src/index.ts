@@ -1,65 +1,32 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { Request, Response } from 'express';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 import { promises as fs } from 'fs';
 import path from 'path';
-import prisma from './database/db';
-import { loginRoute } from './routes/login.route';
+import { authRoute } from './routes/auth.route';
 import { userRoute } from './routes/user.route';
 import { assignmentRoute } from './routes/assignment.route';
 import { classroomRoute } from './routes/classroom.route';
 import { submissionRoute } from './routes/submission.route';
+import { authMiddleware } from './middlewares/auth';
 
 dotenv.config();
 const port = process.env.PORT || 1337;
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", async (req: Request, res: Response) => {
     res.json({ message: "Hello API!" });
 });
-
-
-// Test route
-// -------------------------------------------------------------------------
-app.get("/users", async (req: Request, res: Response) => {
-    const user = await prisma.users.findMany();
-    res.json(user);
-});
-
-app.get("/classrooms", async (req: Request, res: Response) => {
-    const classroom = await prisma.classroom.findMany({
-        include: {
-            teacher: true
-        }
-    });
-    res.json(classroom);
-});
-
-app.get("/enrollments", async (req: Request, res: Response) => {
-    const enrollment = await prisma.enrollment.findMany();
-    res.json(enrollment);
-});
-
-
-app.get("/assignments", async (req: Request, res: Response) => {
-    const assignments = await prisma.assignment.findMany();
-    res.json(assignments);
-});
-
-app.get("/submissions", async (req: Request, res: Response) => {
-    const submissions = await prisma.submission.findMany({
-        include: {
-            student: true
-        }
-    });
-    res.json(submissions);
-});
-
-// -------------------------------------------------------------------------
 
 
 app.get("/test-file/:user_id", async (req: Request, res: Response) => {
@@ -85,12 +52,18 @@ app.get("/test-file/:user_id", async (req: Request, res: Response) => {
 
 });
 
-app.use("/api/login", loginRoute);
-app.use("/api/users", userRoute);
-app.use("/api/assignments", assignmentRoute);
-app.use("/api/classrooms", classroomRoute);
-app.use("/api/submissions", submissionRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/me", authMiddleware, authRoute);
+app.use("/api/users", authMiddleware, userRoute);
+app.use("/api/assignments", authMiddleware, assignmentRoute);
+app.use("/api/classrooms", authMiddleware, classroomRoute);
+app.use("/api/submissions", authMiddleware, submissionRoute);
 
+
+app.get("/c", (req: Request, res: Response) => {
+    console.log("Cookies from client:", req.headers.cookie);
+    res.json({ cookies: req.headers.cookie });
+});
 
 app.use((req: Request, res: Response) => {
     res.status(404).json({ message: "ไม่พบเส้นทางที่เรียกใช้" });

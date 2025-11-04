@@ -4,7 +4,7 @@ const API_URL = "http://localhost:9999/api";
 
 export async function login(request: LoginRequest): Promise<LoginResponse> {
     try {
-        const res = await fetch(`${API_URL}/login`, {
+        const res = await fetch(`${API_URL}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request),

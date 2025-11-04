@@ -5,7 +5,6 @@ import { IoMegaphone } from "react-icons/io5";
 
 const teacher: string = "Mr.Nattapong Nakaom";
 
-
 interface announce {
   id: number;
   title: string;
@@ -47,7 +46,7 @@ export default function Page() {
         <div className="order-2 md:order-1 flex flex-col gap-5">
           {assignments.map((work) => (
             <div
-              key=  {work.id}
+              key={work.id}
               className=" bg-white p-5 rounded-xl border border-gray-300 cursor-pointer hover:shadow-md duration-300 transition-all"
             >
               <div className="flex items-center gap-5">
