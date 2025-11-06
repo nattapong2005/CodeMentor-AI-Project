@@ -1,28 +1,33 @@
 "use client";
-
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoClose, IoDocument, IoHomeOutline } from "react-icons/io5";
 import { FaBars, FaBook, FaUser } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
+import { logout } from "../services/auth";
+import { useRouter } from "next/navigation";
 
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
-
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/login');
+  };
 
   const navItems = [
     { icon: <IoHomeOutline />, title: "หน้าแรก", url: "/teacher/home" },
     { icon: <FaBook />, title: "งานของฉัน", url: "/home" },
     { icon: <FaUser />, title: "บุคคล", url: "/user" },
     { icon: <IoDocument />, title: "งานของชั้นเรียน", url: "/teacher/assignment" },
-    { icon: <MdLogout />, title: "ออกจากระบบ", action: () => alert("ออกจากระบบ") },
+    { icon: <MdLogout />, title: "ออกจากระบบ", action: handleLogout },
   ];
 
 
@@ -43,16 +48,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <div
-      className={`bg-white text-slate-800 transition-all duration-300 ease-in-out border-r border-slate-200 flex flex-col ${
-        isOpen ? "w-64" : "w-20"
-      }`}
+      className={`bg-white text-slate-800 transition-all duration-300 ease-in-out border-r border-slate-200 flex flex-col ${isOpen ? "w-64" : "w-20"
+        }`}
     >
       {/* Header and Toggle Button */}
       <div className="flex items-center h-16 px-4 border-b border-slate-200">
         <h1
-          className={`font-bold text-lg text-blue-600 overflow-hidden transition-opacity duration-200 whitespace-nowrap ${
-            isOpen ? "opacity-100" : "opacity-0"
-          }`}
+          className={`font-bold text-lg text-blue-600 overflow-hidden transition-opacity duration-200 whitespace-nowrap ${isOpen ? "opacity-100" : "opacity-0"
+            }`}
         >
           CodeMentor AI
         </h1>
@@ -93,7 +96,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           return (
             <div key={item.title} className="px-2 mb-2">
               {item.url ? (
-                <Link href={item.url} className={linkClasses}>  
+                <Link href={item.url} className={linkClasses}>
                   {content}
                 </Link>
               ) : (

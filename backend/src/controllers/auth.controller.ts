@@ -33,13 +33,12 @@ export const authController = {
                 httpOnly: true,
                 // secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
+                secure: false,
                 path: "/",
                 maxAge: 60 * 60,
             });
 
-            console.log("Set-Cookie header:", serializedCookie);
             res.setHeader("Set-Cookie", serializedCookie);
-
             return res.status(200).json({ message: "เข้าสู่ระบบสำเร็จ", user_id: user.user_id, role: user.role });
         } catch (err) {
             console.error(err);
@@ -78,6 +77,6 @@ export const authController = {
         if (!req.user) {
             return res.status(401).json({ message: "ไม่พบข้อมูลผู้ใช้" });
         }
-        return res.status(200).json(req.user); 
+        return res.status(200).json(req.user);
     }
 };
