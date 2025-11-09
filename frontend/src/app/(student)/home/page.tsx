@@ -24,6 +24,8 @@ const announce: announce[] = [
   },
 ]
 
+
+
 export default function Page() {
   return (
     <>

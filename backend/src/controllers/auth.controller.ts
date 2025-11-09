@@ -5,7 +5,8 @@ import bcrypt from "bcryptjs";
 import { loginSchema } from "../types/login";
 import cookie from "cookie";
 
-const JWT_SECRET = process.env.JWT_SECRET || "defaultjwtsecreteieie2025krtktirti#$*#**$#$**#$**";
+const JWT_SECRET = process.env.JWT_SECRET || "fghfKDSJJfgrk#U$Y#@#($($4564553485734A";
+
 
 export const authController = {
     login: async (req: Request, res: Response) => {
@@ -37,9 +38,9 @@ export const authController = {
                 path: "/",
                 maxAge: 60 * 60,
             });
-
             res.setHeader("Set-Cookie", serializedCookie);
-            return res.status(200).json({ message: "เข้าสู่ระบบสำเร็จ", user_id: user.user_id, role: user.role });
+            
+            return res.status(200).json({ message: "เข้าสู่ระบบสำเร็จ", user_id: user.user_id, role: user.role, token: token });
         } catch (err) {
             console.error(err);
             return res.status(500).json({ message: "เกิดข้อผิดพลาดในเซิร์ฟเวอร์" });

@@ -1,9 +1,10 @@
+// import dotenv from 'dotenv';
+import 'dotenv/config';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { Request, Response } from 'express';
 import chalk from 'chalk';
-import dotenv from 'dotenv';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { authRoute } from './routes/auth.route';
@@ -13,7 +14,7 @@ import { classroomRoute } from './routes/classroom.route';
 import { submissionRoute } from './routes/submission.route';
 import { authMiddleware } from './middlewares/auth';
 
-dotenv.config();
+
 const port = process.env.PORT || 1337;
 const app = express();
 app.use(cors({

@@ -5,10 +5,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     token: string;
-    user: {
-        user_id: number;
-        name: string;
-        email: string;
-    };
-    message?: string
+    user_id: number;
+    name: string;
+    role: string;
+    // message?: string
 }
