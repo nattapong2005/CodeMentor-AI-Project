@@ -13,6 +13,7 @@ import { assignmentRoute } from './routes/assignment.route';
 import { classroomRoute } from './routes/classroom.route';
 import { submissionRoute } from './routes/submission.route';
 import { authMiddleware } from './middlewares/auth';
+import prisma from './database/db';
 
 
 const port = process.env.PORT || 1337;
@@ -70,6 +71,18 @@ app.use((req: Request, res: Response) => {
     res.status(404).json({ message: "ไม่พบเส้นทางที่เรียกใช้" });
 });
 
+
+// async function main() {
+//   try {
+//     await prisma.$connect();
+//     console.log('✅ Database connected successfully!');
+//   } catch (error) {
+//     console.error('❌ Database connection failed:', error);
+//   } finally {
+//     await prisma.$disconnect();
+//   }
+// }
+// main();
 
 const online = `
 ╔═╗╔═╗╦  ╦╔═╗  ╔═╗╔╗╔╦  ╦╔╗╔╔═╗

@@ -1,14 +1,22 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { assignments } from '@/app/data/assignment';
 import { FaBookAtlas } from 'react-icons/fa6';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Link from 'next/link';
+import { getAssignment } from '@/app/utils/assignment';
+
+interface Assignment {
+    assignment_id: number;
+    title: string;
+    description: string;
+}
 
 export default function Page() {
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+    const [assignment, setAssignment] = useState<Assignment[]>([]);
+
 
     const toggleMenu = (id: number) => {
         setOpenMenuId(openMenuId === id ? null : id);
@@ -26,18 +34,16 @@ export default function Page() {
         setOpenMenuId(null);
     };
 
+    const fetchUser = async () => {
+        try {
+            const assignment = await getAssignment();
+            setAssignment(assignment);
+        } catch (err) {
+            console.error(err);
+        }
+    }
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setOpenMenuId(null);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+        fetchUser();
     }, []);
 
     return (
@@ -49,9 +55,9 @@ export default function Page() {
                 <Link href={`/teacher/assignment/create`} ><button className='bg-primary text-white px-5 rounded-lg py-1 cursor-pointer'>สร้าง</button></Link>
             </div>
             <ul className="divide-y divide-gray-200">
-                {assignments.map((work) => (
+                {assignment.map((work) => (
                     <li
-                        key={work.id}
+                        key={work.class}
                         className="py-4 px-4 hover:bg-gray-50 transition duration-150 cursor-pointer relative border-b border-b-gray-300"
                     >
                         <div className="flex justify-between items-start">

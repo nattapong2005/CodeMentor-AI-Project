@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import MyModal from "./../../../components/Modal";
 import { getClassroom } from "@/app/utils/classroom";
+import MyModal from "@/app/components/Modal";
 
 interface Classroom {
   class_id: number;
@@ -16,7 +16,6 @@ interface Classroom {
 export default function Page() {
 
   const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
-  // const [classroom, setClassroom] = useState<Classroom>([]);
   const [classroom, setClassroom] = useState<Classroom[]>([]);
   // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();

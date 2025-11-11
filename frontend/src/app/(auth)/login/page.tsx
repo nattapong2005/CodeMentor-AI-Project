@@ -41,7 +41,7 @@ const Login: React.FC = () => {
         <div className="hidden md:block flex-1 text-center md:text-left text-white">
           <h1 className='text-5xl font-bold mb-5'>CodeMentor AI</h1>
           <h1 className="text-3xl lg:text-4xl font-bold mb-5">
-            สวัสดี, นักศึกษาทุกค
+            สวัสดี, นักศึกษาทุกคน
           </h1>
           <p className='text-lg max-w-md text-gray-200'>ระบบที่ช่วยให้ผู้สอนติดตามความคืบหน้า และช่วยให้นักเรียนได้รับ Feedback ที่มีคุณภาพเพื่อพัฒนาทักษะได้อย่างตรงจุด </p>
         </div>
