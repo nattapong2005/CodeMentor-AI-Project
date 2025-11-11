@@ -1,40 +1,19 @@
-export const API_URL = "http://localhost:3001/api/v1";
+import axios from "axios";
 
-type FetchOptions = RequestInit & { params?: Record<string, any> };
+export const API_URL = "http://localhost:9999/api";
 
-async function fetchApi<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-  const { params, ...fetchOptions } = options;
+export const api = axios.create({
+  baseURL: API_URL,
+});
 
-  // สร้าง query string ถ้ามี params
-  let url = `${API_URL}${endpoint}`;
-  if (params) {
-    const queryString = new URLSearchParams(params).toString();
-    url += `?${queryString}`;
-  }
+api.interceptors.response.use((response) => {
+  return response;
+}, async (error) => {
+  console.error('Response error:', {
+    url: error.config?.url,
+    status: error.response?.status,
+    data: error.response?.data
+  });
 
-  try {
-    const response = await fetch(url, {
-      ...fetchOptions,
-      headers: {
-        "Content-Type": "application/json",
-        ...(fetchOptions.headers || {}),
-      },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("Response error:", {
-        url,
-        status: response.status,
-        data,
-      });
-      throw new Error(data.message || "API request failed");
-    }
-
-    return data;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    throw error;
-  }
-}
+  return Promise.reject(error);
+});

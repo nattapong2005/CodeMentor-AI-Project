@@ -1,47 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import MyModal from "./../../../components/Modal";
+import { getClassroom } from "@/app/utils/classroom";
 
-interface data {
-  id: number;
-  course_name: string;
-  course_description: string;
+interface Classroom {
+  class_id: number;
+  class_name: string;
+  description: string;
   class_color: string;
-  student_count: number;
 }
 
-const fake_data: data[] = [
-  {
-    id: 1,
-    course_name: "การเขียนโปรแกรมไพธอนเบื้องต้น",
-    course_description: "ปวช.1 เทคโนโลยีสารสนเทศ",
-    class_color: "bg-blue-600",
-    student_count: 20,
-  },
-  {
-    id: 2,
-    course_name: "การพัฒนาเว็บไซต์ด้วยไพธอน",
-    course_description: "ปวช.3 เทคโนโลยีสารสนเทศ",
-    class_color: "bg-pink-600",
-    student_count: 18,
-  },
-  {
-    id: 3,
-    course_name: "การจัดการฐานข้อมูลเบื้องต้น",
-    course_description: "ปวส.2 เทคโนโลยีสารสนเทศ",
-    class_color: "bg-amber-600",
-    student_count: 22,
-  },
-];
 
 export default function Page() {
-  const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
+  // const [classroom, setClassroom] = useState<Classroom>([]);
+  const [classroom, setClassroom] = useState<Classroom[]>([]);
+  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  // }
+
+  const fetchClassroom = async () => {
+    try {
+      const classroom = await getClassroom();
+      setClassroom(classroom);
+    } catch (err) {
+      console.error(err)
+    }
   }
+
+  useEffect(() => {
+    fetchClassroom();
+  }, [])
 
   return (
     <>
@@ -58,14 +50,14 @@ export default function Page() {
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-        {fake_data.map((d) => (
-          <div key={d.id} className="bg-white border border-gray-300 rounded-lg hover:shadow-lg duration-300 transition-all cursor-pointer">
-            <div className={`${d.class_color} h-28 p-5 relative text-white `}>
-              <h1 className="text-2xl">{d.course_name}</h1>
-              <h2>{d.course_description}</h2>
+        {classroom.map((c) => (
+          <div key={c.class_id} className="bg-white border border-gray-300 rounded-lg hover:shadow-lg duration-300 transition-all">
+            <div className={` h-28 p-5 relative `}>
+              <h1 className="text-2xl">{c.class_name}</h1>
+              <h2>{c.description}</h2>
             </div>
             <div className="flex justify-end p-5">
-              <p className="text-lg">{d.student_count} คน</p>
+              <p className="text-lg">000 คน</p>
             </div>
           </div>
         ))}
@@ -78,7 +70,7 @@ export default function Page() {
             <input type="text" className="border border-gray-300 rounded-md p-2 w-full" placeholder="กรอกชื่อชั้นเรียน" />
           </div>
           <div className="mb-5">
-             <label htmlFor="class" className="block mb-2">ระดับชั้น</label>
+            <label htmlFor="class" className="block mb-2">ระดับชั้น</label>
             <select name="" id="" className="border border-gray-300 rounded-md p-2 w-full">
               <option defaultValue={"0"}>เลือกระดับชั้น</option>
               <option value="1">ปวช.1 เทคโนโอวัลติน</option>
