@@ -50,7 +50,7 @@ export default function Page() {
               <h2>{c.description}</h2>
             </div>
             <div className="flex justify-end p-5">
-              <p className="text-lg">000 คน</p>
+              <p className="text-lg">9999 คน</p>
             </div>
           </div>
         ))}

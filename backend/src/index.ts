@@ -14,6 +14,7 @@ import { classroomRoute } from './routes/classroom.route';
 import { submissionRoute } from './routes/submission.route';
 import { authMiddleware } from './middlewares/auth';
 import prisma from './database/db';
+import { enrollRoute } from './routes/entrollment.route';
 
 
 const port = process.env.PORT || 1337;
@@ -60,6 +61,7 @@ app.use("/api/users", authMiddleware, userRoute);
 app.use("/api/assignments", authMiddleware, assignmentRoute);
 app.use("/api/classrooms", authMiddleware, classroomRoute);
 app.use("/api/submissions", authMiddleware, submissionRoute);
+app.use("/api/enrollments", enrollRoute);
 
 
 app.get("/c", (req: Request, res: Response) => {
