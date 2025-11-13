@@ -7,7 +7,6 @@ import cookie from "cookie";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fghfKDSJJfgrk#U$Y#@#($($4564553485734A";
 
-
 export const authController = {
     login: async (req: Request, res: Response) => {
         try {
