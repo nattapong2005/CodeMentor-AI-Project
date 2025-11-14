@@ -38,7 +38,7 @@ export const authController = {
                 maxAge: 60 * 60,
             });
             res.setHeader("Set-Cookie", serializedCookie);
-            
+
             return res.status(200).json({ message: "เข้าสู่ระบบสำเร็จ", user_id: user.user_id, role: user.role, token: token });
         } catch (err) {
             console.error(err);
@@ -47,12 +47,15 @@ export const authController = {
     },
     register: async (req: Request, res: Response) => {
         try {
-            const { email, password } = req.body;
+            const { email, password, name, lastname, role } = req.body;
             const hashedPassword = await bcrypt.hash(password, 10);
             const user = await prisma.users.create({
                 data: {
                     email,
                     password: hashedPassword,
+                    name,
+                    lastname,
+                    role
                 },
             });
             return res.status(201).json({ message: "สมัครสมาชิกสําเร็จ", user_id: user.user_id });
@@ -73,10 +76,4 @@ export const authController = {
         );
         return res.status(200).json({ message: "ออกจากระบบสำเร็จ" });
     },
-    me: async (req: Request, res: Response) => {
-        if (!req.user) {
-            return res.status(401).json({ message: "ไม่พบข้อมูลผู้ใช้" });
-        }
-        return res.status(200).json(req.user);
-    }
 };

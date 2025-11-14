@@ -75,7 +75,7 @@ export const userController = {
 
             const { name, lastname, email, password, role } = result.data;
             const user = await prisma.users.update({
-                where: { user_id },
+                where: { user_id: user_id as string },
                 data: {
                     name,
                     lastname,
@@ -108,5 +108,15 @@ export const userController = {
         } catch (err) {
             console.log(err)
         }
+    },
+    getMe: async (req: Request, res: Response) => {
+        if (!req.user) {
+            return res.status(401).json({ message: "ไม่พบข้อมูลผู้ใช้" });
+        }
+        const user = await prisma.users.findUnique({ where: { user_id: req.user.user_id } });
+        if (!user) {
+            return res.status(500).json({message: "เกิดข้อผิดพลาดในเซิฟเวอร์"});
+        }
+        return res.status(200).json(user);
     }
 }

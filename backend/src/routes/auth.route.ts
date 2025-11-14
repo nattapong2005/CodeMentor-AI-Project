@@ -6,4 +6,3 @@ export const authRoute = Router();
 authRoute.post("/login", authController.login);
 authRoute.post("/register", authController.register);
 authRoute.post("/logout", authController.logout);
-authRoute.get('/', authController.me);

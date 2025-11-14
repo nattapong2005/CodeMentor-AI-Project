@@ -7,7 +7,7 @@ export interface LoginResponse {
     user_id: number;
     name: string;
     role: string;
-    // message?: string
+    message?: string
 }
 export interface JwtPayload {
     user_id?: string;

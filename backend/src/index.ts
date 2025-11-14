@@ -13,7 +13,6 @@ import { assignmentRoute } from './routes/assignment.route';
 import { classroomRoute } from './routes/classroom.route';
 import { submissionRoute } from './routes/submission.route';
 import { authMiddleware } from './middlewares/auth';
-import prisma from './database/db';
 import { enrollRoute } from './routes/entrollment.route';
 
 

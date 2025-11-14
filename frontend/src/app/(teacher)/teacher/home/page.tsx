@@ -30,6 +30,15 @@ export default function Page() {
     }
   }
 
+  const fetchMe = async () => {
+    try {
+      
+    }catch (err){
+      console.log(err)
+    }
+  }
+
+
   useEffect(() => {
     fetchClassroom();
   }, [])
