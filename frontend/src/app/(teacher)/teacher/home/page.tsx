@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { getClassroom } from "@/app/utils/classroom";
 import MyModal from "@/app/components/Modal";
+import { getClassroom } from "@/app/services/classroom";
+import { getMe } from "@/app/services/user";
 
 interface Classroom {
   class_id: number;
@@ -12,11 +13,17 @@ interface Classroom {
   class_color: string;
 }
 
+interface Me {
+  name: string;
+  lastname: string;
+}
+
 
 export default function Page() {
 
   const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
   const [classroom, setClassroom] = useState<Classroom[]>([]);
+  const [me, setMe] = useState<Me>();
   // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   // }
@@ -32,15 +39,16 @@ export default function Page() {
 
   const fetchMe = async () => {
     try {
-      
+      const me = await getMe();
+      setMe(me);
     }catch (err){
       console.log(err)
     }
   }
 
-
   useEffect(() => {
     fetchClassroom();
+    fetchMe();
   }, [])
 
   return (
@@ -48,7 +56,7 @@ export default function Page() {
       <div className="flex justify-between items-start sm:item-center mb-2 mt-2">
         <div>
           <h1 className="text-2xl">ชั้นเรียนของคุณ</h1>
-          <h2>ยินดีต้อนรับ, Mr.Nattapong Nakaom</h2>
+          <h2>ยินดีต้อนรับ, {me?.name} {me?.lastname}</h2>
         </div>
         <button
           onClick={() => setIsCreateClassModalOpen(true)}

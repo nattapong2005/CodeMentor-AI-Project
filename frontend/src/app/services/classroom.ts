@@ -1,15 +1,16 @@
-import { api } from "../services/api";
+import { api } from "../utils/api";
 import Cookies from "js-cookie";
+
 export const getClassroom = async () => {
     try {
         const token = Cookies.get("auth_token");
-        const res = await api.get("/classrooms", {
+        const { data } = await api.get("/classrooms", {
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        return res.data;
+        return data;
     } catch (err) {
         console.error("Error fetching classrooms:", err);
         throw err;

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { FaBookAtlas } from 'react-icons/fa6';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Link from 'next/link';
-import { getAssignment } from '@/app/utils/assignment';
+import { getAssignment } from '@/app/services/assignment';
 
 interface Assignment {
     assignment_id: number;

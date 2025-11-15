@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { login } from '@/app/services/auth';
 import { useRouter } from "next/navigation";
 import { MdEmail } from 'react-icons/md';
 import { TbLockPassword } from 'react-icons/tb';
 import { IoIosAlert } from 'react-icons/io';
+import { login } from '@/app/services/auth';
 const Login: React.FC = () => {
 
   const router = useRouter();
@@ -29,12 +29,10 @@ const Login: React.FC = () => {
       } else if (data.role === "ADMIN") {
         router.push('/admin/dashboard');
       }
-      
     } catch (err: any) {
       setError(err.message);
     }
   }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-blue-700 flex items-center justify-center p-4">
       <div className="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-6xl">

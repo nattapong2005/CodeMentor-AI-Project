@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getEnrollmentById } from "../utils/enrollment";
+import { getMyEnrollment } from "../services/enrollment";
+import { getMe } from "../services/user";
 
 interface Enrollment {
   class_id: number;
@@ -10,25 +11,35 @@ interface Enrollment {
   class_color: string;
 }
 
-
 export default function Page() {
 
   const [enrollment, setEnrollment] = useState<Enrollment[]>([]);
+  const [me, setMe] = useState<any>();
   // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   // }
 
   const fetchEnrollment = async () => {
     try {
-      const myEnrollment = await getEnrollmentById();
+      const myEnrollment = await getMyEnrollment();
       setEnrollment(myEnrollment);
     } catch (err) {
       console.error(err)
     }
   }
 
+  const fetchMe = async () => {
+    try {
+      const me = await getMe();
+      setMe(me);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     fetchEnrollment();
+    fetchMe();
   }, [])
 
   return (
@@ -36,9 +47,9 @@ export default function Page() {
       <div className="flex justify-between items-start sm:item-center mb-2 mt-2">
         <div>
           <h1 className="text-2xl">ชั้นเรียนของคุณ</h1>
-          <h2>ยินดีต้อนรับ, Mr.Nattapong Nakaom</h2>
+          <h2>ยินดีต้อนรับ, {me?.name} {me?.lastname}</h2>
         </div>
-       
+
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {enrollment.map((e) => (

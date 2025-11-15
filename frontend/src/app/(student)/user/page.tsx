@@ -1,6 +1,6 @@
 "use client";
 
-import { getUser } from "@/app/utils/user";
+import { getUser } from "@/app/services/user";
 import { useEffect, useState } from "react";
 import { FaUser, FaUserTie } from "react-icons/fa";
 

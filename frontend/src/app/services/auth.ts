@@ -1,56 +1,29 @@
+import { api } from "../utils/api";
 import { LoginRequest, LoginResponse } from "../types/auth";
 
-const API_URL = "http://localhost:9999/api";
-
-export async function login(request: LoginRequest): Promise<LoginResponse> {
+export const login = async ({ email, password }: LoginRequest): Promise<LoginResponse> => {
     try {
-        const res = await fetch(`${API_URL}/auth/login`, {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(request),
-        });
-        const data: LoginResponse = await res.json();
-        if (!res.ok) {
-            throw new Error(data.message);
-        }
+        const { data } = await api.post<LoginResponse>(
+            "/auth/login",
+            { email, password },
+            { withCredentials: true }
+        );
+        return data;
+    } catch (err: any) {
+        // console.error(err);
+        throw new Error(err.response?.data?.message || err.message);
+    }
+};
+export const logout = async (): Promise<any> => {
+    try {
+        const { data } = await api.post(
+            "/auth/logout",
+            {},
+            { withCredentials: true }
+        );
         return data;
     } catch (err) {
-        console.error(err);
-        throw err;
+        // console.error("Logout error:", err);
+        throw new Error('Logout failed');
     }
-}
-export async function logout() {
-    try {
-        const res = await fetch(`${API_URL}/auth/logout`, {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-        })
-        const data = await res.json();
-        if (!res.ok) {
-            throw new Error(data.message);
-        }
-    }catch (err) {
-        console.error(err);
-        throw err;
-    }
-}
-
-export async function getMe() {
-    try {
-        const res = await fetch(`${API_URL}/users/me`, {
-            method: "GET",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-            throw new Error(data.message);
-        }
-        return data;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
-}
+};

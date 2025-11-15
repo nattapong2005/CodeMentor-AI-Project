@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { IoClose, IoDocument, IoHomeOutline } from "react-icons/io5";
 import { FaBars, FaBook, FaUser } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-import { logout } from "../services/auth";
 import { useRouter } from "next/navigation";
+import { logout } from "../services/auth";
 
 interface SidebarProps {
   isOpen: boolean;

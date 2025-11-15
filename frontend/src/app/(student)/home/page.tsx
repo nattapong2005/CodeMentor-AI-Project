@@ -1,24 +1,19 @@
 "use client";
 
-import { getAssignment } from "@/app/utils/assignment";
+import { getAssignment } from "@/app/services/assignment";
+import { getMyEnrollment } from "@/app/services/enrollment";
+import { getMe } from "@/app/services/user";
+import { Assignment } from "@/app/types/assignment";
+import { User } from "@/app/types/user";
 import { useEffect, useState } from "react";
 import { FaBook } from "react-icons/fa";
 import { IoMegaphone } from "react-icons/io5";
 
-const teacher: string = "Mr.Nattapong Nakaom";
-
-
-interface Assignment {
-  assignment_id: number;
-  title: string;
-  create_at: string;
-}
-
-
 export default function Page() {
 
-
   const [assignment, setAssignment] = useState<Assignment[]>([]);
+  const [enrollment, setEnrollment] = useState<User>();
+  const [me, setMe] = useState<Me>()
 
   const fetchAssignment = async () => {
     try {
@@ -28,20 +23,39 @@ export default function Page() {
       console.error(err)
     }
   }
+  const fetchMe = async () => {
+    try {
+      const me = await getMe();
+      setMe(me);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const fetchEnrollment = async () => {
+    try {
+      const enrollment = await getMyEnrollment();
+      console.log(enrollment);
+      setEnrollment(enrollment);
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   useEffect(() => {
     fetchAssignment();
+    fetchMe();
+    fetchEnrollment();
   }, [])
-
 
   return (
     <>
       <div className="bg-primary p-5 rounded-2xl">
         <div className="flex flex-wrap gap-2 justify-between items-center">
           <div>
-            <h1 className="text-white text-xl sm:text-2xl">สวัสดีคุณ, {teacher}</h1>
-            <p className="text-gray-300 text-lg sm:text-xl mt-1">20000-9999 การเขียนโปรแกรมไพธอนเบื้องต้น</p>
-            <p className="text-gray-300 text-lg sm:text-xl mt-1">ปวช.1 เทคโนโลยีสารสนเทศ</p>
+            <h1 className="text-white text-xl sm:text-2xl">สวัสดีคุณ, {me?.name} {me?.lastname}</h1>
+            <p className="text-gray-300 text-lg sm:text-xl mt-1">{enrollment?.enrollments?.[0]?.classroom?.class_name}</p>
+            {/* <p className="text-gray-300 text-lg sm:text-xl mt-1">ปวช.1 เทคโนโลยีสารสนเทศ</p> */}
           </div>
           <div>
             <button className="bg-white text-primary rounded-xl  px-5 py-1.5">ออกจากระบบ</button>
@@ -64,7 +78,7 @@ export default function Page() {
                 </div>
                 <div>
                   <h2 className="text-blue-900 text-sm sm:text-lg font-bold mb-2">
-                    {teacher} โพสต์งานใหม่: {work.title}
+                    {me?.name} {me?.lastname} โพสต์งานใหม่: {work.title}
                   </h2>
                   <p className="text-gray-500 text-sm">โพสต์เมื่อ: {work.create_at}</p>
                 </div>
