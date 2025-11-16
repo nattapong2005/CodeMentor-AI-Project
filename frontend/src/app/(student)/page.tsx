@@ -3,13 +3,8 @@
 import { useEffect, useState } from "react";
 import { getMyEnrollment } from "../services/enrollment";
 import { getMe } from "../services/user";
+import { Enrollment } from "../types/enrollment";
 
-interface Enrollment {
-  class_id: number;
-  class_name: string;
-  description: string;
-  class_color: string;
-}
 
 export default function Page() {
 
@@ -22,12 +17,11 @@ export default function Page() {
   const fetchEnrollment = async () => {
     try {
       const myEnrollment = await getMyEnrollment();
-      setEnrollment(myEnrollment);
+      setEnrollment(myEnrollment.enrollments);
     } catch (err) {
       console.error(err)
     }
   }
-
   const fetchMe = async () => {
     try {
       const me = await getMe();
@@ -36,7 +30,6 @@ export default function Page() {
       console.log(err)
     }
   }
-
   useEffect(() => {
     fetchEnrollment();
     fetchMe();
@@ -49,14 +42,13 @@ export default function Page() {
           <h1 className="text-2xl">ชั้นเรียนของคุณ</h1>
           <h2>ยินดีต้อนรับ, {me?.name} {me?.lastname}</h2>
         </div>
-
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {enrollment.map((e) => (
-          <div key={e.class_id} className="bg-white border border-gray-300 rounded-lg hover:shadow-lg duration-300 transition-all">
+          <div key={e.enrollment_id} className="bg-white border border-gray-300 rounded-lg hover:shadow-lg duration-300 transition-all">
             <div className={` h-28 p-5 relative `}>
-              <h1 className="text-2xl">{e.class_name}</h1>
-              <h2>{e.description}</h2>
+              <h1 className="text-2xl">{e.classroom.class_name}</h1>
+              <h2>{e.classroom.description}</h2>
             </div>
             <div className="flex justify-end p-5">
               <p className="text-lg">9999 คน</p>

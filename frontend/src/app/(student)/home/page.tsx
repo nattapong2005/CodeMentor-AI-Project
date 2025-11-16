@@ -35,7 +35,6 @@ export default function Page() {
   const fetchEnrollment = async () => {
     try {
       const enrollment = await getMyEnrollment();
-      console.log(enrollment);
       setEnrollment(enrollment);
     } catch (err) {
       console.error(err)
@@ -44,8 +43,8 @@ export default function Page() {
 
   useEffect(() => {
     fetchAssignment();
-    fetchMe();
     fetchEnrollment();
+    fetchMe();
   }, [])
 
   return (
