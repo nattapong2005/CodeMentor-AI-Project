@@ -25,7 +25,7 @@ const Login: React.FC = () => {
       if (data.role === "TEACHER") {
         router.push('/teacher/home');
       } else if (data.role === "STUDENT") {
-        router.push('/home');
+        router.push('/student/classrooms');
       } else if (data.role === "ADMIN") {
         router.push('/admin/dashboard');
       }

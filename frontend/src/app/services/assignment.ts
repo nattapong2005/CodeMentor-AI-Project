@@ -15,3 +15,19 @@ export const getAssignment = async () => {
         throw err;
     }
 };
+
+export const getAssignmentById = async (assignment_id: string) => {
+    try {
+        const token = Cookies.get("auth_token");
+        const { data } = await api.get(`/assignments/${assignment_id}`, {
+            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return data;
+    } catch (err) {
+        console.error("Error fetching assignment:", err);
+        throw err;
+    }
+};

@@ -24,9 +24,22 @@ async function verifyToken(token: string) {
 }
 
 export async function middleware(req: NextRequest) {
-  
+
   const token = req.cookies.get('auth_token')?.value
   const { pathname } = req.nextUrl
+
+  if (pathname === "/") {
+    const token = req.cookies.get("auth_token")?.value
+    const referer = req.headers.get("referer")
+
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url))
+    }
+    if (referer && referer !== req.url && !referer.endsWith("/")) {
+      return NextResponse.redirect(referer)
+    }
+    return NextResponse.redirect(new URL("/login", req.url))
+  }
 
   const isPublicRoute = publicRoutes.includes(pathname)
   const isTeacherRoute = pathname.startsWith("/teacher")
@@ -51,7 +64,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/teacher/home", req.url))
     }
     if (payload.role === 'STUDENT') {
-      return NextResponse.redirect(new URL("/home", req.url))
+      return NextResponse.redirect(new URL("/student/home", req.url))
     }
     return NextResponse.next()
   }

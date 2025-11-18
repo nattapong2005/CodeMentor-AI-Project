@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { AuthUser } from "../types/auth";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fghfKDSJJfgrk#U$Y#@#($($4564553485734A";
+const JWT_SECRET = process.env.JWT_SECRET || "uasdup4o54390853409589403!@$@%$%XDSdsfdf";
 
 export interface AuthRequest extends Request {
   user?: AuthUser;

@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { loginSchema } from "../types/login";
 import cookie from "cookie";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fghfKDSJJfgrk#U$Y#@#($($4564553485734A";
+const JWT_SECRET = process.env.JWT_SECRET || "uasdup4o54390853409589403!@$@%$%XDSdsfdf";
 
 export const authController = {
     login: async (req: Request, res: Response) => {

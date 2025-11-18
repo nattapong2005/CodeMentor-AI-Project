@@ -36,7 +36,7 @@ model Classroom {
   class_id    String @id @default(auto()) @map("_id") @db.ObjectId
   class_name  String 
   description String 
-
+  announce String[]
   // ความสัมพันธ์: เชื่อมโยงไปยังครูผู้สอน
   teacher_id String @db.ObjectId
   teacher    Users  @relation("TeacherClasses", fields: [teacher_id], references: [user_id])

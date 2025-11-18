@@ -1,37 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getMyEnrollment } from "../services/enrollment";
-import { getMe } from "../services/user";
-import { Enrollment } from "../types/enrollment";
+import { getMyEnrollment } from "@/app/services/enrollment";
+import { getMe } from "@/app/services/user";
+import { Enrollment } from "@/app/types/enrollment";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
 
 export default function Page() {
+
   const [enrollment, setEnrollment] = useState<Enrollment[]>([]);
   const [me, setMe] = useState<any>();
+  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  // }
 
   const fetchEnrollment = async () => {
     try {
       const myEnrollment = await getMyEnrollment();
       setEnrollment(myEnrollment.enrollments);
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
-
+  }
   const fetchMe = async () => {
     try {
       const me = await getMe();
       setMe(me);
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
-
+  }
   useEffect(() => {
     fetchEnrollment();
     fetchMe();
-  }, []);
+  }, [])
 
   return (
     <>
@@ -41,12 +44,11 @@ export default function Page() {
           <h2>ยินดีต้อนรับ, {me?.name} {me?.lastname}</h2>
         </div>
       </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {enrollment.map((e) => (
-          <Link href="/student/assignments" key={e.enrollment_id}>
-            <div className="bg-white border border-gray-300 rounded-lg hover:shadow-lg duration-300 transition-all cursor-pointer">
-              <div className="h-28 p-5 relative">
+          <Link key={e.enrollment_id} href={`/student/classroom/${e.classroom.class_id}`}>
+            <div className="bg-white border border-gray-300 rounded-lg hover:shadow-lg duration-300 transition-all">
+              <div className={` h-28 p-5 relative `}>
                 <h1 className="text-2xl">{e.classroom.class_name}</h1>
                 <h2>{e.classroom.description}</h2>
               </div>
