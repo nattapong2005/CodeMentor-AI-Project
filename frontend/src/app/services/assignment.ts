@@ -16,10 +16,10 @@ export const getAssignment = async () => {
     }
 };
 
-export const getAssignmentById = async (assignment_id: string) => {
+export const getAssignmentByClassId = async (assignment_id: string) => {
     try {
         const token = Cookies.get("auth_token");
-        const { data } = await api.get(`/assignments/${assignment_id}`, {
+        const { data } = await api.get(`/assignments/a/${assignment_id}`, {
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${token}`,

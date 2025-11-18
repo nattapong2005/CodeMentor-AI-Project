@@ -1,23 +1,25 @@
 "use client";
 
-import { getAssignment } from "@/app/services/assignment";
+import { getAssignment, getAssignmentByClassId } from "@/app/services/assignment";
 import { getMyEnrollment } from "@/app/services/enrollment";
 import { getMe } from "@/app/services/user";
 import { Assignment } from "@/app/types/assignment";
 import { User } from "@/app/types/user";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBook } from "react-icons/fa";
 import { IoMegaphone } from "react-icons/io5";
 
 export default function Page() {
 
+  const params = useParams<{ classroom_id: string }>()
   const [assignment, setAssignment] = useState<Assignment[]>([]);
   const [enrollment, setEnrollment] = useState<User>();
   const [me, setMe] = useState<Me>()
 
   const fetchAssignment = async () => {
     try {
-      const assignment = await getAssignment();
+      const assignment = await getAssignmentByClassId(params.classroom_id);
       setAssignment(assignment);
     } catch (err) {
       console.error(err)
@@ -54,7 +56,6 @@ export default function Page() {
           <div>
             <h1 className="text-white text-xl sm:text-2xl">สวัสดีคุณ, {me?.name} {me?.lastname}</h1>
             <p className="text-gray-300 text-lg sm:text-xl mt-1">{enrollment?.enrollments?.[0]?.classroom?.class_name}</p>
-            {/* <p className="text-gray-300 text-lg sm:text-xl mt-1">ปวช.1 เทคโนโลยีสารสนเทศ</p> */}
           </div>
           <div>
             <button className="bg-white text-primary rounded-xl  px-5 py-1.5">ออกจากระบบ</button>
@@ -66,41 +67,51 @@ export default function Page() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-5 items-start">
         <div className="order-2 md:order-1 flex flex-col gap-5">
-          {assignment.map((work) => (
-            <div
-              key={work.assignment_id}
-              className=" bg-white p-5 rounded-xl border border-gray-300 cursor-pointer hover:shadow-md duration-300 transition-all"
-            >
-              <div className="flex items-center gap-5">
-                <div className="p-4 bg-gray-200 rounded-full">
-                  <FaBook className="text-2xl" />
-                </div>
-                <div>
-                  <h2 className="text-blue-900 text-sm sm:text-lg font-bold mb-2">
-                    {me?.name} {me?.lastname} โพสต์งานใหม่: {work.title}
-                  </h2>
-                  <p className="text-gray-500 text-sm">โพสต์เมื่อ: {work.create_at}</p>
+          {assignment.length === 0 ? (
+            <div className="text-center text-gray-500 py-10">
+              ไม่พบข้อมูลงาน
+            </div>
+          ) : (
+            assignment.map((work) => (
+              <div
+                key={work.assignment_id}
+                className="bg-white p-5 rounded-xl border border-gray-300 cursor-pointer hover:shadow-md duration-300 transition-all"
+              >
+                <div className="flex items-center gap-5">
+                  <div className="p-4 bg-gray-200 rounded-full">
+                    <FaBook className="text-2xl" />
+                  </div>
+                  <div>
+                    <h2 className="text-blue-900 text-sm sm:text-lg font-bold mb-2">
+                      {me?.name} {me?.lastname} โพสต์งานใหม่: {work.title}
+                    </h2>
+                    <p className="text-gray-500 text-sm">โพสต์เมื่อ: {work.create_at}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
         <div className="order-1 md:order-2 bg-white rounded-xl border border-gray-300">
           <div className="flex items-center">
             <IoMegaphone className="text-xl ms-2" />
             <h2 className="p-3 font-bold text-lg">ประกาศทั่วไป</h2>
           </div>
+
           <div className="px-3 mb-2 flex flex-col space-y-2">
-            {
+            {assignment.length === 0 ? (
+              <div className=" text-gray-500">
+                ไม่พบข้อมูลการประกาศ
+              </div>
+            ) : (
               assignment.map((a) => (
                 <div key={a.assignment_id} className="bg-white border border-gray-300 p-2 rounded-lg">
                   <p>{a.title}</p>
                   <p className="text-xs">{a.create_at}</p>
                 </div>
               ))
-            }
+            )}
           </div>
-
         </div>
       </div>
     </>
