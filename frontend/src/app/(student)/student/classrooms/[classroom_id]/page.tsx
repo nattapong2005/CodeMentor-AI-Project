@@ -5,6 +5,7 @@ import { getMyEnrollment } from "@/app/services/enrollment";
 import { getMe } from "@/app/services/user";
 import { Assignment } from "@/app/types/assignment";
 import { User } from "@/app/types/user";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBook } from "react-icons/fa";
@@ -73,7 +74,8 @@ export default function Page() {
             </div>
           ) : (
             assignment.map((work) => (
-              <div
+              <Link
+                href={`/student/c`}
                 key={work.assignment_id}
                 className="bg-white p-5 rounded-xl border border-gray-300 cursor-pointer hover:shadow-md duration-300 transition-all"
               >
@@ -88,7 +90,7 @@ export default function Page() {
                     <p className="text-gray-500 text-sm">โพสต์เมื่อ: {work.create_at}</p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </div>

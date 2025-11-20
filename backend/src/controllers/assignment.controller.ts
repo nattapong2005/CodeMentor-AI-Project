@@ -20,6 +20,26 @@ export const assignmentController = {
             const assignment = await prisma.assignment.findUnique({
                 where: { assignment_id: assignment_id as string },
             });
+            console.log(assignment)
+            if (!assignment) {
+                return res.status(404).json({ message: "ไม่พบการส่งงาน" });
+            }
+            return res.status(200).json(assignment);
+        } catch (err: any) {
+            console.log(err)
+            if (err.code === "P2023") {
+                return res.status(400).json({message: "assignment_id ไม่ถูกต้อง" });
+            }
+        }
+    },
+    getAssignmentByClassId: async (req: Request, res: Response) => {
+        try {
+            const { class_id } = req.params;
+
+            const assignment = await prisma.assignment.findMany({
+                where: { class_id: class_id as string },
+            });
+
             if (!assignment) {
                 return res.status(404).json({ message: "ไม่พบการส่งงาน" });
             }
@@ -27,22 +47,6 @@ export const assignmentController = {
         } catch (err) {
             console.log(err)
         }
-    },
-    getAssignmentByClassId: async (req: Request, res: Response) => {
-        try {
-            const { class_id } = req.params;
-            
-            const assignment = await prisma.assignment.findMany({
-                where: { class_id: class_id as string },
-            });
-        
-            if (!assignment) {
-                return res.status(404).json({ message: "ไม่พบการส่งงาน" });
-            }
-            return res.status(200).json(assignment);
-        } catch (err) {
-            console.log(err)
-        } 
     },
     createAssignment: async (req: Request, res: Response) => {
         try {

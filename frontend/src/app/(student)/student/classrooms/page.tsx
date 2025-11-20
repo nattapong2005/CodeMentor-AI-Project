@@ -46,7 +46,7 @@ export default function Page() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {enrollment.map((e) => (
-          <Link key={e.enrollment_id} href={`/student/classroom/${e.classroom.class_id}`}>
+          <Link key={e.enrollment_id} href={`/student/classrooms/${e.classroom.class_id}`}>
             <div className="bg-white border border-gray-300 rounded-lg hover:shadow-lg duration-300 transition-all">
               <div className={` h-28 p-5 relative `}>
                 <h1 className="text-2xl">{e.classroom.class_name}</h1>
