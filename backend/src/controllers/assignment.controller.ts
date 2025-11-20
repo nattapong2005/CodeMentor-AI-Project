@@ -35,7 +35,7 @@ export const assignmentController = {
             const assignment = await prisma.assignment.findMany({
                 where: { class_id: class_id as string },
             });
-            
+        
             if (!assignment) {
                 return res.status(404).json({ message: "ไม่พบการส่งงาน" });
             }

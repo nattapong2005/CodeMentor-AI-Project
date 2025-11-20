@@ -13,6 +13,19 @@ enum Role {
   TEACHER
   STUDENT
 }
+enum FeedBackLevel {
+  HINT
+  CONCEPT
+  ANSWER
+  NONE
+}
+
+enum SubmitStatus {
+  PENDING
+  LATE
+  DONE
+  MISSING
+}
 
 model Users {
   user_id  String @id @default(auto()) @map("_id") @db.ObjectId
@@ -20,7 +33,7 @@ model Users {
   lastname String
   email    String @unique
   password String
-  role     Role 
+  role     Role
 
   // ความสัมพันธ์: ถ้าเป็นครู จะสร้างห้องเรียนอะไรไว้บ้าง
   taughtClasses Classroom[] @relation("TeacherClasses")
@@ -33,13 +46,13 @@ model Users {
 }
 
 model Classroom {
-  class_id    String @id @default(auto()) @map("_id") @db.ObjectId
-  class_name  String 
-  description String 
-  announce String[]
+  class_id    String   @id @default(auto()) @map("_id") @db.ObjectId
+  class_name  String
+  description String
+  announce    String[]
   // ความสัมพันธ์: เชื่อมโยงไปยังครูผู้สอน
-  teacher_id String @db.ObjectId
-  teacher    Users  @relation("TeacherClasses", fields: [teacher_id], references: [user_id])
+  teacher_id  String   @db.ObjectId
+  teacher     Users    @relation("TeacherClasses", fields: [teacher_id], references: [user_id])
 
   // ความสัมพันธ์: นักเรียนที่อยู่ในห้องนี้ (ผ่าน Model Enrollment)
   students Enrollment[]
@@ -50,8 +63,8 @@ model Classroom {
 
 // Model ใหม่: สำหรับเชื่อมโยงนักเรียนกับห้องเรียน (Many-to-Many)
 model Enrollment {
-  enrollment_id String    @id @default(auto()) @map("_id") @db.ObjectId
-  joined_at     DateTime  @default(now())
+  enrollment_id String   @id @default(auto()) @map("_id") @db.ObjectId
+  joined_at     DateTime @default(now())
 
   // ความสัมพันธ์: เชื่อมโยงไปหา Class
   class_id  String    @db.ObjectId
@@ -67,11 +80,12 @@ model Enrollment {
 
 model Assignment {
   assignment_id  String   @id @default(auto()) @map("_id") @db.ObjectId
-  title          String   
-  description    String   // <-- เพิ่มฟิลด์นี้สำหรับเก็บ "โจทย์"
-  due_date       DateTime 
-  create_at      DateTime  @default(now())
-  feedback_level String   // (Hint, Concept, Answer, None) [cite: 2, 3]
+  title          String
+  description    String 
+  score          Int
+  due_date       DateTime
+  create_at      DateTime @default(now())
+  feedback_level FeedBackLevel 
 
   // ความสัมพันธ์: งานนี้อยู่ในห้องเรียนไหน
   class_id  String    @db.ObjectId
@@ -83,13 +97,13 @@ model Assignment {
 
 model Submission {
   submission_id String   @id @default(auto()) @map("_id") @db.ObjectId
-  code          String   
-  submitted_at  DateTime  @default(now()) // (แก้คำผิดจาก subbmit_at)
-  status        String   // (Submitted, Grading, Graded) 
-  score         Int      
+  code          String
+  submitted_at  DateTime @default(now()) 
+  status        String 
+  score         Int
 
-  // แยก Feedback ตามที่โปรเจกต์ต้องการ 
-  ai_feedback      String? // Feedback จาก AI
+    // แยก Feedback ตามที่โปรเจกต์ต้องการ 
+  ai_feedback      String? // Feedback  จาก AI
   teacher_feedback String? // Feedback เพิ่มเติมจากครู 
 
   // ความสัมพันธ์: การส่งงานนี้เป็นของงานชิ้นไหน

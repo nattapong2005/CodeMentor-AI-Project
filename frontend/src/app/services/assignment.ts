@@ -31,3 +31,19 @@ export const getAssignmentByClassId = async (assignment_id: string) => {
         throw err;
     }
 };
+
+export const getAssignmentInClassId = async (class_id: string) => {
+    try {
+        const token = Cookies.get("auth_token");
+        const { data } = await api.get(`/assignments/${class_id}`, {
+            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return data;
+    } catch (err) {
+        console.error("Error fetching assignment:", err);
+        throw err;
+    }
+};  
